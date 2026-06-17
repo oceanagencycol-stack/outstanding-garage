@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outstanding Garage — Puertas de Garaje Modernas</title>
+  <meta name="description" content="Especialistas en instalación y mantenimiento de puertas de garaje modernas, seguras y de alta calidad." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Inter"', 'sans-serif'],
+            body: ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              black: '#0a0a0a',
+              white: '#fafafa',
+              gray: '#e5e5e5',
+              mid: '#888888',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469128/Logo_2_y1rx4s.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Preload del video para que el scrubbing sea fluido desde el primer scroll -->
+  <link rel="preload" as="video" href="https://res.cloudinary.com/dpo9ohngt/video/upload/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-family: 'Inter', sans-serif; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #666; }
+
+    /* Smooth reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-left.active { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-right.active { opacity: 1; transform: translateX(0); }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+    /* Hero parallax */
+    .hero-bg { will-change: transform; transition: transform 0.1s linear; }
+
+    /* Image hover zoom */
+    .img-zoom { overflow: hidden; }
+    .img-zoom img { transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    .img-zoom:hover img { transform: scale(1.06); }
+
+    /* Marquee */
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-track { animation: marquee 25s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+
+    /* Video container */
+    .video-container { position: relative; overflow: hidden; }
+    .video-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(10,10,10,0.6) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ============================================
+       SCROLL-DRIVEN VIDEO ("la web se arma sola")
+       El bloque #assembly mide 300vh de alto.
+       Mientras haces scroll por él, el video queda
+       fijo (sticky) y avanza cuadro a cuadro según
+       cuánto has bajado. La puerta se ensambla.
+    ============================================ */
+    .assembly-track {
+      position: relative;
+      height: 300vh; /* mientras más alto, más lento y cinematográfico el ensamblaje */
+    }
+    .assembly-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a0a;
+    }
+    .assembly-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      will-change: contents;
+    }
+    /* Capas de texto que aparecen en fases del ensamblaje */
+    .assembly-caption {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 12%;
+      text-align: center;
+      padding: 0 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .assembly-caption.show { opacity: 1; transform: translateY(0); }
+    .assembly-progress {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 3px;
+      background: #fafafa;
+      width: 0%;
+      z-index: 4;
+      transition: width 0.1s linear;
+    }
+    .assembly-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(10,10,10,0.55) 100%);
+    }
+
+    /* Floating button pulse */
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    .whatsapp-pulse::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: #25D366;
+      animation: pulse-ring 2s ease-out infinite;
+      z-index: -1;
+    }
+
+    /* Nav blur */
+    .nav-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+
+    /* Line animation */
+    .line-grow { width: 0; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .line-grow.active { width: 100%; }
+
+    /* Stagger children */
+    .stagger-children > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .stagger-children.active > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(6) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+
+    /* Gallery grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      gap: 8px;
+    }
+    .gallery-grid .gallery-item:first-child { grid-column: 1 / -1; grid-row: 1 / 2; }
+    @media (min-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: auto auto;
+        gap: 12px;
+      }
+      .gallery-grid .gallery-item:nth-child(1) { grid-column: 1 / 8; grid-row: 1 / 3; }
+      .gallery-grid .gallery-item:nth-child(2) { grid-column: 8 / 13; grid-row: 1 / 2; }
+      .gallery-grid .gallery-item:nth-child(3) { grid-column: 8 / 13; grid-row: 2 / 3; }
+      .gallery-grid .gallery-item:nth-child(4) { grid-column: 1 / 6; grid-row: 3 / 4; }
+      .gallery-grid .gallery-item:nth-child(5) { grid-column: 6 / 13; grid-row: 3 / 4; }
+    }
+
+    /* Cursor custom for desktop */
+    @media (min-width: 1024px) {
+      .custom-cursor { cursor: none; }
+      .cursor-dot {
+        width: 8px; height: 8px; background: #fafafa; border-radius: 50%;
+        position: fixed; pointer-events: none; z-index: 9999;
+        transition: transform 0.15s ease; mix-blend-mode: difference;
+      }
+      .cursor-ring {
+        width: 40px; height: 40px; border: 1.5px solid rgba(250,250,250,0.5);
+        border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998;
+        transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+        mix-blend-mode: difference;
+      }
+    }
+
+    /* Language switch */
+    .lang-btn {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      color: rgba(250,250,250,0.4);
+      transition: color 0.3s ease;
+    }
+    .lang-btn.active { color: #fafafa; }
+    .lang-sep { color: rgba(250,250,250,0.2); }
+
+    /* Respeta usuarios que piden menos movimiento */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children > * {
+        opacity: 1 !important; transform: none !important; transition: none !important;
+      }
+      .marquee-track { animation: none; }
+    }
+  </style>
+</head>
+<body class="bg-brand-black text-brand-white custom-cursor overflow-x-hidden">
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot hidden lg:block" id="cursorDot"></div>
+  <div class="cursor-ring hidden lg:block" id="cursorRing"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-10">
+      <div class="flex items-center justify-between h-20 md:h-24">
+        <!-- Logo -->
+        <a href="#hero" class="relative z-50">
+          <img id="navLogo" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469128/Logo_2_y1rx4s.png" alt="Outstanding Garage" class="h-16 md:h-20 transition-all duration-300" />
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-10">
+          <a href="#about" class="text-sm font-medium tracking-wide uppercase hover:opacity-60 transition-opacity duration-300" data-es="Nosotros" data-en="About">Nosotros</a>
+          <a href="#gallery" class="text-sm font-medium tracking-wide uppercase hover:opacity-60 transition-opacity duration-300" data-es="Galería" data-en="Gallery">Galería</a>
+          <a href="#assembly" class="text-sm font-medium tracking-wide uppercase hover:opacity-60 transition-opacity duration-300" data-es="Proceso" data-en="Process">Proceso</a>
+          <a href="#contact" class="text-sm font-medium tracking-wide uppercase hover:opacity-60 transition-opacity duration-300" data-es="Contacto" data-en="Contact">Contacto</a>
+          <!-- Language Switch -->
+          <div class="flex items-center gap-1.5 ml-2">
+            <button class="lang-btn active" data-lang="es" aria-label="Español">ES</button>
+            <span class="lang-sep">/</span>
+            <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+          </div>
+          <div class="flex items-center gap-4 ml-2">
+            <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="hover:opacity-60 transition-opacity duration-300" aria-label="WhatsApp">
+              <i data-lucide="message-circle" class="w-5 h-5"></i>
+            </a>
+            <a href="https://www.instagram.com/outstandinggarage?igsh=aXIya29mbWY2MXdn" target="_blank" rel="noopener" class="hover:opacity-60 transition-opacity duration-300" aria-label="Instagram">
+              <i data-lucide="instagram" class="w-5 h-5"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile: lang + menu -->
+        <div class="md:hidden flex items-center gap-4 relative z-50">
+          <div class="flex items-center gap-1.5">
+            <button class="lang-btn active" data-lang="es" aria-label="Español">ES</button>
+            <span class="lang-sep">/</span>
+            <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+          </div>
+          <button id="menuBtn" class="w-10 h-10 flex items-center justify-center" aria-label="Menú">
+            <i data-lucide="menu" class="w-6 h-6" id="menuIcon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 bg-brand-black z-40 flex flex-col items-center justify-center gap-8 transform translate-x-full transition-transform duration-500 ease-in-out md:hidden">
+      <a href="#about" class="text-2xl font-light tracking-wide mobile-link" data-es="Nosotros" data-en="About">Nosotros</a>
+      <a href="#gallery" class="text-2xl font-light tracking-wide mobile-link" data-es="Galería" data-en="Gallery">Galería</a>
+      <a href="#assembly" class="text-2xl font-light tracking-wide mobile-link" data-es="Proceso" data-en="Process">Proceso</a>
+      <a href="#contact" class="text-2xl font-light tracking-wide mobile-link" data-es="Contacto" data-en="Contact">Contacto</a>
+      <div class="flex items-center gap-6 mt-6">
+        <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="hover:opacity-60 transition-opacity" aria-label="WhatsApp">
+          <i data-lucide="message-circle" class="w-7 h-7"></i>
+        </a>
+        <a href="https://www.instagram.com/outstandinggarage?igsh=aXIya29mbWY2MXdn" target="_blank" rel="noopener" class="hover:opacity-60 transition-opacity" aria-label="Instagram">
+          <i data-lucide="instagram" class="w-7 h-7"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="relative h-screen w-full overflow-hidden">
+    <div class="hero-bg absolute inset-0">
+      <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/21c6cfb9a126220c953e95f054714504_azu7ba.jpg" alt="Outstanding Garage - Modern Garage Door" class="w-full h-full object-cover" />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70"></div>
+
+    <div class="relative z-10 h-full flex flex-col justify-end pb-20 md:pb-28 px-6 md:px-10 max-w-[1400px] mx-auto">
+      <div class="reveal">
+        <p class="text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-white/70 mb-4 md:mb-6" data-es="Puertas de Garaje de Alta Calidad" data-en="High-Quality Garage Doors">Puertas de Garaje de Alta Calidad</p>
+        <h1 class="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-[0.9] tracking-tight">
+          Outstanding<br/>
+          <span class="font-light">Garage</span>
+        </h1>
+        <div class="mt-6 md:mt-10 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+          <p class="text-base md:text-lg font-light text-white/70 max-w-md" data-es="Especialistas en instalación y mantenimiento de puertas de garaje modernas, seguras y de alta calidad." data-en="Specialists in the installation and maintenance of modern, secure, high-quality garage doors.">Especialistas en instalación y mantenimiento de puertas de garaje modernas, seguras y de alta calidad.</p>
+          <a href="#contact" class="inline-flex items-center gap-3 border border-white/40 hover:border-white hover:bg-white hover:text-black px-7 py-3.5 text-sm font-medium tracking-wide uppercase transition-all duration-400 group" data-es="Contáctanos" data-en="Get in touch">
+            <span data-es="Contáctanos" data-en="Get in touch">Contáctanos</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-50">
+      <span class="text-[10px] tracking-[0.3em] uppercase" data-es="Scroll" data-en="Scroll">Scroll</span>
+      <div class="w-px h-8 bg-white/50 animate-pulse"></div>
+    </div>
+  </section>
+
+  <!-- Marquee Strip -->
+  <div class="bg-white text-black py-4 overflow-hidden">
+    <div class="marquee-track flex items-center whitespace-nowrap" style="width: max-content;">
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Instalación Profesional" data-en="Professional Installation">Instalación Profesional</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Diseño Moderno" data-en="Modern Design">Diseño Moderno</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Mantenimiento Experto" data-en="Expert Maintenance">Mantenimiento Experto</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Seguridad Garantizada" data-en="Guaranteed Security">Seguridad Garantizada</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Alta Calidad" data-en="High Quality">Alta Calidad</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Servicio Premium" data-en="Premium Service">Servicio Premium</span>
+      <span class="text-lg">✦</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Instalación Profesional" data-en="Professional Installation">Instalación Profesional</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Diseño Moderno" data-en="Modern Design">Diseño Moderno</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Mantenimiento Experto" data-en="Expert Maintenance">Mantenimiento Experto</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Seguridad Garantizada" data-en="Guaranteed Security">Seguridad Garantizada</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Alta Calidad" data-en="High Quality">Alta Calidad</span>
+      <span class="text-lg">✦</span>
+      <span class="text-sm md:text-base font-medium tracking-[0.2em] uppercase mx-8" data-es="Servicio Premium" data-en="Premium Service">Servicio Premium</span>
+      <span class="text-lg">✦</span>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCROLL-ASSEMBLY VIDEO SECTION
+       Aquí "la web se arma sola": el video de la
+       puerta se ensambla a medida que bajas.
+  ============================================ -->
+  <section id="assembly" class="relative bg-brand-black">
+    <!-- Intro de la sección -->
+    <div class="py-24 md:py-32 px-6 md:px-10">
+      <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
+        <div>
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="En Movimiento" data-en="In Motion">En Movimiento</p>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight">
+            <span data-es="Nuestro" data-en="Our">Nuestro</span><br/>
+            <span class="font-light text-brand-mid" data-es="Proceso" data-en="Process">Proceso</span>
+          </h2>
+        </div>
+        <p class="text-sm text-white/50 font-light max-w-sm" data-es="Desliza hacia abajo y observa cómo cada pieza encaja en su lugar. La puerta se ensambla ante tus ojos." data-en="Scroll down and watch each piece lock into place. The door assembles before your eyes.">Desliza hacia abajo y observa cómo cada pieza encaja en su lugar. La puerta se ensambla ante tus ojos.</p>
+      </div>
+    </div>
+
+    <!-- Track largo que controla el scrubbing -->
+    <div class="assembly-track" id="assemblyTrack">
+      <div class="assembly-sticky">
+        <video
+          id="assemblyVideo"
+          class="assembly-video"
+          muted
+          playsinline
+          preload="auto"
+          poster="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/cd8f992e389e366654fc8df403cd0e79_zpm4m0.jpg"
+        >
+          <source src="https://res.cloudinary.com/dpo9ohngt/video/upload/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
+        </video>
+        <div class="assembly-vignette"></div>
+
+        <!-- Captions por fase -->
+        <div class="assembly-caption" data-from="0.05" data-to="0.42" id="cap1">
+          <span class="inline-block text-xs font-mono tracking-[0.2em] text-white/50 mb-2">01</span>
+          <p class="text-lg md:text-2xl font-light max-w-2xl mx-auto" data-es="Los marcos de metal negro mate se deslizan a su lugar, bloqueándose de abajo hacia arriba." data-en="Matte-black metal frames slide into place, locking together from the bottom up.">Los marcos de metal negro mate se deslizan a su lugar, bloqueándose de abajo hacia arriba.</p>
+        </div>
+        <div class="assembly-caption" data-from="0.45" data-to="0.85" id="cap2">
+          <span class="inline-block text-xs font-mono tracking-[0.2em] text-white/50 mb-2">02</span>
+          <p class="text-lg md:text-2xl font-light max-w-2xl mx-auto" data-es="Los paneles de vidrio reflectante flotan y encajan en cada sección de la rejilla." data-en="Reflective glass panels float in and settle into each section of the grid.">Los paneles de vidrio reflectante flotan y encajan en cada sección de la rejilla.</p>
+        </div>
+        <div class="assembly-caption" data-from="0.88" data-to="1.01" id="cap3">
+          <span class="inline-block text-xs font-mono tracking-[0.2em] text-white/50 mb-2">03</span>
+          <p class="text-lg md:text-2xl font-light max-w-2xl mx-auto" data-es="Una puerta terminada. Forma, función y seguridad en perfecta sincronía." data-en="A finished door. Form, function and security in perfect sync.">Una puerta terminada. Forma, función y seguridad en perfecta sincronía.</p>
+        </div>
+
+        <div class="assembly-progress" id="assemblyProgress"></div>
+      </div>
+    </div>
+
+    <!-- Tarjetas resumen (debajo del scrubbing) -->
+    <div class="px-6 md:px-10 pb-24 md:pb-32">
+      <div class="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto stagger-children">
+        <div class="border border-white/10 p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-xs font-mono text-brand-mid">01</span>
+            <div class="h-px flex-1 bg-white/10"></div>
+          </div>
+          <p class="text-sm text-white/70 font-light leading-relaxed" data-es="Elegantes marcos de metal horizontales negro mate se deslizan hacia su lugar, bloqueándose entre sí de abajo hacia arriba." data-en="Sleek horizontal matte-black metal frames slide into place, locking into one another from the bottom up.">Elegantes marcos de metal horizontales negro mate se deslizan hacia su lugar, bloqueándose entre sí de abajo hacia arriba.</p>
+        </div>
+        <div class="border border-white/10 p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-xs font-mono text-brand-mid">02</span>
+            <div class="h-px flex-1 bg-white/10"></div>
+          </div>
+          <p class="text-sm text-white/70 font-light leading-relaxed" data-es="Amplios paneles rectangulares de vidrio reflectante flotan y encajan suavemente en cada sección abierta de la rejilla metálica." data-en="Wide rectangular panels of reflective glass float in and settle softly into each open section of the metal grid.">Amplios paneles rectangulares de vidrio reflectante flotan y encajan suavemente en cada sección abierta de la rejilla metálica.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-24 md:py-36 px-6 md:px-10">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+        <!-- Left Column -->
+        <div class="md:col-span-5 reveal-left">
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="Sobre Nosotros" data-en="About Us">Sobre Nosotros</p>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight">
+            <span data-es="Diseño que" data-en="Design that">Diseño que</span><br/>
+            <span class="font-light text-brand-mid" data-es="protege" data-en="protects">protege</span>
+          </h2>
+          <div class="line-grow h-px bg-white/20 mt-8 mb-8"></div>
+          <p class="text-base md:text-lg font-light text-white/60 leading-relaxed" data-es="En Outstanding Garage, cada puerta es una declaración de estilo y seguridad. Combinamos ingeniería de precisión con estética minimalista para transformar la entrada de tu hogar." data-en="At Outstanding Garage, every door is a statement of style and security. We combine precision engineering with minimalist aesthetics to transform the entrance to your home.">En Outstanding Garage, cada puerta es una declaración de estilo y seguridad. Combinamos ingeniería de precisión con estética minimalista para transformar la entrada de tu hogar.</p>
+        </div>
+
+        <!-- Right Column - Stats/Features -->
+        <div class="md:col-span-7 md:pt-16 stagger-children">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
+            <div class="border-t border-white/10 pt-6">
+              <p class="text-4xl md:text-5xl font-bold tracking-tight">10+</p>
+              <p class="text-sm text-white/50 mt-2 font-light" data-es="Años de experiencia" data-en="Years of experience">Años de experiencia</p>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+              <p class="text-4xl md:text-5xl font-bold tracking-tight">500+</p>
+              <p class="text-sm text-white/50 mt-2 font-light" data-es="Proyectos completados" data-en="Completed projects">Proyectos completados</p>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+              <p class="text-4xl md:text-5xl font-bold tracking-tight">100%</p>
+              <p class="text-sm text-white/50 mt-2 font-light" data-es="Garantía de calidad" data-en="Quality guarantee">Garantía de calidad</p>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+              <p class="text-4xl md:text-5xl font-bold tracking-tight">24/7</p>
+              <p class="text-sm text-white/50 mt-2 font-light" data-es="Servicio de emergencia" data-en="Emergency service">Servicio de emergencia</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Services Cards -->
+      <div class="mt-20 md:mt-28 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 stagger-children">
+        <div class="group border border-white/10 hover:border-white/30 p-8 md:p-10 transition-all duration-500 hover:bg-white/[0.02]">
+          <div class="w-12 h-12 flex items-center justify-center border border-white/20 mb-6 group-hover:border-white/50 transition-colors duration-500">
+            <i data-lucide="wrench" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3" data-es="Instalación" data-en="Installation">Instalación</h3>
+          <p class="text-sm text-white/50 font-light leading-relaxed" data-es="Instalación profesional de puertas de garaje con precisión milimétrica y acabados impecables." data-en="Professional garage door installation with millimeter precision and flawless finishes.">Instalación profesional de puertas de garaje con precisión milimétrica y acabados impecables.</p>
+        </div>
+        <div class="group border border-white/10 hover:border-white/30 p-8 md:p-10 transition-all duration-500 hover:bg-white/[0.02]">
+          <div class="w-12 h-12 flex items-center justify-center border border-white/20 mb-6 group-hover:border-white/50 transition-colors duration-500">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3" data-es="Mantenimiento" data-en="Maintenance">Mantenimiento</h3>
+          <p class="text-sm text-white/50 font-light leading-relaxed" data-es="Servicio de mantenimiento preventivo y correctivo para asegurar el funcionamiento óptimo." data-en="Preventive and corrective maintenance service to ensure optimal performance.">Servicio de mantenimiento preventivo y correctivo para asegurar el funcionamiento óptimo.</p>
+        </div>
+        <div class="group border border-white/10 hover:border-white/30 p-8 md:p-10 transition-all duration-500 hover:bg-white/[0.02]">
+          <div class="w-12 h-12 flex items-center justify-center border border-white/20 mb-6 group-hover:border-white/50 transition-colors duration-500">
+            <i data-lucide="ruler" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3" data-es="Diseño a Medida" data-en="Custom Design">Diseño a Medida</h3>
+          <p class="text-sm text-white/50 font-light leading-relaxed" data-es="Puertas personalizadas que se adaptan perfectamente a la arquitectura de tu vivienda." data-en="Custom doors that fit perfectly with the architecture of your home.">Puertas personalizadas que se adaptan perfectamente a la arquitectura de tu vivienda.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Width Image Divider -->
+  <div class="relative h-[50vh] md:h-[70vh] overflow-hidden img-zoom reveal-scale">
+    <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/acb937285dffffc5dcbf2ddd1101737d_tl91dv.jpg" alt="Garage Door Detail" class="w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <p class="text-xs md:text-sm font-medium tracking-[0.4em] uppercase text-white/80" data-es="Donde la forma encuentra su función" data-en="Where form meets function">Donde la forma encuentra su función</p>
+    </div>
+  </div>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="py-24 md:py-36 px-6 md:px-10">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16 reveal">
+        <div>
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="Nuestro Trabajo" data-en="Our Work">Nuestro Trabajo</p>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight" data-es="Galería" data-en="Gallery">Galería</h2>
+        </div>
+        <p class="text-sm text-white/50 font-light max-w-sm" data-es="Cada proyecto refleja nuestro compromiso con la excelencia y el diseño contemporáneo." data-en="Each project reflects our commitment to excellence and contemporary design.">Cada proyecto refleja nuestro compromiso con la excelencia y el diseño contemporáneo.</p>
+      </div>
+
+      <div class="gallery-grid stagger-children">
+        <div class="gallery-item img-zoom relative aspect-[4/3] md:aspect-auto md:row-span-2 overflow-hidden reveal-scale">
+          <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/cd8f992e389e366654fc8df403cd0e79_zpm4m0.jpg" alt="Modern Garage Door Installation" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6 md:p-8">
+            <p class="text-sm font-light" data-es="Instalación residencial moderna" data-en="Modern residential installation">Instalación residencial moderna</p>
+          </div>
+        </div>
+        <div class="gallery-item img-zoom relative aspect-[4/3] overflow-hidden reveal-scale">
+          <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/8350-microgroove-back-frost-double-narrow-windows_fuybd4.jpg" alt="Garage Door with Frosted Windows" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+            <p class="text-sm font-light" data-es="Microgroove con ventanas heladas" data-en="Microgroove with frosted windows">Microgroove con ventanas heladas</p>
+          </div>
+        </div>
+        <div class="gallery-item img-zoom relative aspect-[4/3] overflow-hidden reveal-scale">
+          <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468933/Pro-Garage-Door-Care_koa7pm.webp" alt="Professional Garage Door Care" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+            <p class="text-sm font-light" data-es="Cuidado profesional" data-en="Professional care">Cuidado profesional</p>
+          </div>
+        </div>
+        <div class="gallery-item img-zoom relative aspect-[4/3] overflow-hidden reveal-scale">
+          <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/21c6cfb9a126220c953e95f054714504_azu7ba.jpg" alt="Full House with Garage Door" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+            <p class="text-sm font-light" data-es="Vista completa residencial" data-en="Full residential view">Vista completa residencial</p>
+          </div>
+        </div>
+        <div class="gallery-item img-zoom relative aspect-[16/9] md:aspect-auto overflow-hidden reveal-scale">
+          <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/acb937285dffffc5dcbf2ddd1101737d_tl91dv.jpg" alt="Modern Architecture" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+            <p class="text-sm font-light" data-es="Arquitectura contemporánea" data-en="Contemporary architecture">Arquitectura contemporánea</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-24 md:py-36 px-6 md:px-10 relative overflow-hidden">
+    <!-- Background pattern -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+
+    <div class="max-w-[1400px] mx-auto relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+        <!-- Left -->
+        <div class="md:col-span-7 reveal-left">
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="Contacto" data-en="Contact">Contacto</p>
+          <h2 class="text-4xl md:text-5xl lg:text-7xl font-bold leading-[0.95] tracking-tight">
+            <span data-es="Hablemos de" data-en="Let's talk about">Hablemos de</span><br/>
+            <span class="font-light text-brand-mid" data-es="tu proyecto" data-en="your project">tu proyecto</span>
+          </h2>
+          <p class="mt-6 text-base md:text-lg font-light text-white/50 max-w-lg leading-relaxed" data-es="Estamos listos para ayudarte a encontrar la puerta de garaje perfecta para tu hogar. Contáctanos y recibe una consulta gratuita." data-en="We're ready to help you find the perfect garage door for your home. Reach out for a free consultation.">
+            Estamos listos para ayudarte a encontrar la puerta de garaje perfecta para tu hogar. Contáctanos y recibe una consulta gratuita.
+          </p>
+
+          <!-- Contact Buttons -->
+          <div class="mt-10 flex flex-col sm:flex-row gap-4">
+            <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="group inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white px-8 py-4 transition-all duration-400">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <span class="text-sm font-medium tracking-wide">WhatsApp</span>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"></i>
+            </a>
+            <a href="https://www.instagram.com/outstandinggarage?igsh=aXIya29mbWY2MXdn" target="_blank" rel="noopener" class="group inline-flex items-center gap-3 border border-white/30 hover:border-white hover:bg-white hover:text-black px-8 py-4 transition-all duration-400">
+              <i data-lucide="instagram" class="w-5 h-5"></i>
+              <span class="text-sm font-medium tracking-wide">Instagram</span>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right - Quick Info -->
+        <div class="md:col-span-5 md:pt-20 reveal-right">
+          <div class="space-y-8">
+            <div class="border-t border-white/10 pt-6">
+              <p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-2" data-es="Teléfono" data-en="Phone">Teléfono</p>
+              <a href="tel:+13052401921" class="text-xl md:text-2xl font-light hover:opacity-60 transition-opacity">+1 305 240 1921</a>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+              <p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-2">Instagram</p>
+              <a href="https://www.instagram.com/outstandinggarage?igsh=aXIya29mbWY2MXdn" target="_blank" rel="noopener" class="text-xl md:text-2xl font-light hover:opacity-60 transition-opacity">@outstandinggarage</a>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+              <p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-2" data-es="Servicio" data-en="Service">Servicio</p>
+              <p class="text-xl md:text-2xl font-light" data-es="Disponible 24/7" data-en="Available 24/7">Disponible 24/7</p>
+            </div>
+          </div>
+
+          <!-- Black Logo -->
+          <div class="mt-12 p-8 bg-white flex items-center justify-center reveal-scale">
+            <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469127/Logo_pcyjmj.png" alt="Outstanding Garage" class="h-24 md:h-28" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-10 md:py-14 px-6 md:px-10">
+    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-6">
+        <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469128/Logo_2_y1rx4s.png" alt="Outstanding Garage" class="h-12 opacity-60" />
+        <p class="text-xs text-white/30 font-light" data-es="© 2025 Outstanding Garage. Todos los derechos reservados." data-en="© 2025 Outstanding Garage. All rights reserved.">© 2025 Outstanding Garage. Todos los derechos reservados.</p>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors duration-300" aria-label="WhatsApp">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/outstandinggarage?igsh=aXIya29mbWY2MXdn" target="_blank" rel="noopener" class="text-white/40 hover:text-white transition-colors duration-300" aria-label="Instagram">
+          <i data-lucide="instagram" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg shadow-black/30 hover:scale-110 transition-transform duration-300 whatsapp-pulse" aria-label="Contactar por WhatsApp">
+    <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- Lucide Icons & Scripts -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // ==================
+    // Language Switch (ES / EN)
+    // ==================
+    const langButtons = document.querySelectorAll('.lang-btn');
+
+    function setLanguage(lang) {
+      // Texto de cada elemento traducible
+      document.querySelectorAll('[data-es]').forEach(el => {
+        const val = el.getAttribute('data-' + lang);
+        if (val !== null) el.textContent = val;
+      });
+      // Atributo lang del documento (bueno para SEO/accesibilidad)
+      document.documentElement.lang = lang;
+      // Estado visual de los botones
+      langButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      try { localStorage.setItem('og_lang', lang); } catch (e) {}
+    }
+
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+    });
+
+    // Idioma inicial: guardado > idioma del navegador > español
+    (function initLang() {
+      let saved = null;
+      try { saved = localStorage.getItem('og_lang'); } catch (e) {}
+      const browser = (navigator.language || 'es').toLowerCase().startsWith('en') ? 'en' : 'es';
+      setLanguage(saved || browser);
+    })();
+
+    // ==================
+    // Custom Cursor
+    // ==================
+    const cursorDot = document.getElementById('cursorDot');
+    const cursorRing = document.getElementById('cursorRing');
+
+    if (window.innerWidth >= 1024) {
+      let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        cursorDot.style.left = mouseX - 4 + 'px';
+        cursorDot.style.top = mouseY - 4 + 'px';
+      });
+      function animateRing() {
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        cursorRing.style.left = ringX - 20 + 'px';
+        cursorRing.style.top = ringY - 20 + 'px';
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+      document.querySelectorAll('a, button, .img-zoom, video').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursorRing.style.width = '60px';
+          cursorRing.style.height = '60px';
+          cursorRing.style.left = ringX - 30 + 'px';
+          cursorRing.style.top = ringY - 30 + 'px';
+          cursorDot.style.transform = 'scale(0)';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursorRing.style.width = '40px';
+          cursorRing.style.height = '40px';
+          cursorDot.style.transform = 'scale(1)';
+        });
+      });
+    }
+
+    // ==================
+    // Scroll Reveal
+    // ==================
+    const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .line-grow, .stagger-children');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('active');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // ==================
+    // Navigation Scroll Effect
+    // ==================
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll > 100) {
+        navbar.classList.add('nav-blur', 'bg-black/80');
+        navbar.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+      } else {
+        navbar.classList.remove('nav-blur', 'bg-black/80');
+        navbar.style.borderBottom = 'none';
+      }
+      if (currentScroll > lastScroll && currentScroll > 300) {
+        navbar.style.transform = 'translateY(-100%)';
+      } else {
+        navbar.style.transform = 'translateY(0)';
+      }
+      lastScroll = currentScroll;
+    });
+
+    // ==================
+    // Mobile Menu
+    // ==================
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    let menuOpen = false;
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        mobileMenu.style.transform = 'translateX(0)';
+        document.body.style.overflow = 'hidden';
+        menuIcon.setAttribute('data-lucide', 'x');
+      } else {
+        mobileMenu.style.transform = 'translateX(100%)';
+        document.body.style.overflow = '';
+        menuIcon.setAttribute('data-lucide', 'menu');
+      }
+      lucide.createIcons();
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.style.transform = 'translateX(100%)';
+        document.body.style.overflow = '';
+        menuIcon.setAttribute('data-lucide', 'menu');
+        lucide.createIcons();
+      });
+    });
+
+    // ==================
+    // SCROLL-DRIVEN VIDEO ASSEMBLY
+    // El corazón del efecto: el currentTime del video
+    // se ata al progreso del scroll dentro de #assemblyTrack.
+    // ==================
+    (function setupScrollVideo() {
+      const track = document.getElementById('assemblyTrack');
+      const video = document.getElementById('assemblyVideo');
+      const progressBar = document.getElementById('assemblyProgress');
+      const caps = [
+        { el: document.getElementById('cap1'), from: 0.05, to: 0.42 },
+        { el: document.getElementById('cap2'), from: 0.45, to: 0.85 },
+        { el: document.getElementById('cap3'), from: 0.88, to: 1.01 },
+      ];
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let videoDuration = 0;
+      let targetTime = 0;
+      let currentTime = 0;
+      let ticking = false;
+
+      // Marca el video como listo cuando conocemos su duración
+      function onMeta() {
+        videoDuration = video.duration || 10; // fallback 10s
+      }
+      if (video.readyState >= 1) onMeta();
+      video.addEventListener('loadedmetadata', onMeta);
+
+      // Si el navegador no permite scrubbing (algunos móviles antiguos),
+      // dejamos el video en autoplay loop como respaldo elegante.
+      let scrubSupported = true;
+      function fallbackToAutoplay() {
+        scrubSupported = false;
+        video.loop = true;
+        video.play().catch(() => {});
+      }
+
+      function computeProgress() {
+        const rect = track.getBoundingClientRect();
+        const vh = window.innerHeight;
+        // total de scroll disponible dentro del track
+        const scrollable = track.offsetHeight - vh;
+        // cuánto hemos avanzado (0 a 1)
+        let p = (-rect.top) / scrollable;
+        p = Math.max(0, Math.min(1, p));
+        return p;
+      }
+
+      function updateCaptions(p) {
+        caps.forEach(c => {
+          if (!c.el) return;
+          const show = p >= c.from && p < c.to;
+          c.el.classList.toggle('show', show);
+        });
+      }
+
+      function render() {
+        // suavizado: nos acercamos al target poco a poco
+        currentTime += (targetTime - currentTime) * 0.12;
+        if (videoDuration && scrubSupported) {
+          try { video.currentTime = currentTime * videoDuration; } catch (e) {}
+        }
+        if (Math.abs(targetTime - currentTime) > 0.001) {
+          requestAnimationFrame(render);
+        } else {
+          ticking = false;
+        }
+      }
+
+      function onScroll() {
+        const p = computeProgress();
+        targetTime = p;
+        progressBar.style.width = (p * 100) + '%';
+        updateCaptions(p);
+        if (!ticking && scrubSupported) {
+          ticking = true;
+          requestAnimationFrame(render);
+        }
+      }
+
+      if (prefersReduced) {
+        // Sin movimiento: mostramos un fotograma fijo + autoplay suave opcional
+        fallbackToAutoplay();
+        // igual mostramos captions por scroll
+        window.addEventListener('scroll', () => updateCaptions(computeProgress()), { passive: true });
+      } else {
+        // Intento de scrubbing real
+        video.pause();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        // primer cálculo
+        onScroll();
+
+        // Si tras cargar no se puede fijar currentTime, caemos a autoplay
+        video.addEventListener('error', fallbackToAutoplay);
+      }
+    })();
+
+    // ==================
+    // Hero Parallax
+    // ==================
+    const heroBg = document.querySelector('.hero-bg');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      if (scrollY < window.innerHeight) {
+        heroBg.style.transform = `translateY(${scrollY * 0.3}px) scale(1.1)`;
+      }
+    });
+
+    // ==================
+    // Smooth Scroll for anchor links
+    // ==================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+</body>
+</html>
