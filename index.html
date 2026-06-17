@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="preload" as="video" href="https://res.cloudinary.com/dpo9ohngt/video/upload/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
+  <link rel="preload" as="video" href="https://res.cloudinary.com/dpo9ohngt/video/upload/ki_999,vc_h264,q_auto/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     html{font-family:'Inter',sans-serif;}
@@ -83,7 +83,7 @@
     .ul-hover:hover::after{width:100%;}
 
     /* ===== ASSEMBLY VIDEO (single section, scroll-scrubbed) ===== */
-    .assembly-track{position:relative;height:320vh;}
+    .assembly-track{position:relative;height:420vh;}
     .assembly-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0a0a0a;}
     .assembly-video{width:100%;height:100%;object-fit:cover;will-change:contents;}
     .assembly-vignette{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(10,10,10,.6) 100%);}
@@ -281,7 +281,7 @@
       <div class="assembly-sticky">
         <video id="assemblyVideo" class="assembly-video" muted playsinline preload="auto"
           poster="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/cd8f992e389e366654fc8df403cd0e79_zpm4m0.jpg">
-          <source src="https://res.cloudinary.com/dpo9ohngt/video/upload/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/dpo9ohngt/video/upload/ki_999,vc_h264,q_auto/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
         </video>
         <div class="assembly-vignette"></div>
         <div class="assembly-step-label" data-es="El proceso" data-en="The process">The process</div>
@@ -491,18 +491,82 @@
     const hb=document.querySelector('.hero-bg');
     window.addEventListener('scroll',()=>{const y=window.scrollY;if(y<window.innerHeight)hb.style.transform=`translateY(${y*0.35}px) scale(1.1)`;});
 
-    // Assembly scroll-scrub
-    (function(){const track=document.getElementById('assemblyTrack'),video=document.getElementById('assemblyVideo'),pb=document.getElementById('assemblyProgress');
+    // Assembly scroll-scrub (fluido: bucle continuo + suavizado + precarga total)
+    (function(){
+      const track=document.getElementById('assemblyTrack'),video=document.getElementById('assemblyVideo'),pb=document.getElementById('assemblyProgress');
       const caps=[{el:document.getElementById('cap1'),f:.04,t:.40},{el:document.getElementById('cap2'),f:.43,t:.82},{el:document.getElementById('cap3'),f:.85,t:1.01}];
-      const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;let dur=0,target=0,cur=0,ticking=false,scrub=true;
-      function meta(){dur=video.duration||10;}if(video.readyState>=1)meta();video.addEventListener('loadedmetadata',meta);
-      function fb(){scrub=false;video.loop=true;video.play().catch(()=>{});}
-      function prog(){const r=track.getBoundingClientRect(),vh=window.innerHeight,sc=track.offsetHeight-vh;let p=(-r.top)/sc;return Math.max(0,Math.min(1,p));}
+      const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let dur=0,target=0,cur=0,scrub=true,ready=false,running=false,lastApplied=-1;
+
+      function meta(){dur=video.duration||10;}
+      if(video.readyState>=1)meta();
+      video.addEventListener('loadedmetadata',meta);
+
+      // Respaldo elegante si el navegador no permite scrubbing
+      function fb(){scrub=false;video.loop=true;video.muted=true;video.play().catch(()=>{});}
+
+      // Progreso 0..1 dentro del track
+      function prog(){
+        const r=track.getBoundingClientRect(),vh=window.innerHeight,sc=track.offsetHeight-vh;
+        if(sc<=0)return 0;
+        return Math.max(0,Math.min(1,(-r.top)/sc));
+      }
       function caps_u(p){caps.forEach(c=>{if(c.el)c.el.classList.toggle('show',p>=c.f&&p<c.t);});}
-      function render(){cur+=(target-cur)*.12;if(dur&&scrub){try{video.currentTime=cur*dur;}catch(e){}}if(Math.abs(target-cur)>.001)requestAnimationFrame(render);else ticking=false;}
-      function os(){const p=prog();target=p;pb.style.width=(p*100)+'%';caps_u(p);if(!ticking&&scrub){ticking=true;requestAnimationFrame(render);}}
-      if(reduced){fb();window.addEventListener('scroll',()=>caps_u(prog()),{passive:true});}
-      else{video.pause();window.addEventListener('scroll',os,{passive:true});window.addEventListener('resize',os);os();video.addEventListener('error',fb);}
+
+      // Forzamos decodificar el frame nuevo (elimina el tartamudeo) cuando el navegador lo soporta
+      const hasRVFC=typeof video.requestVideoFrameCallback==='function';
+
+      // Bucle continuo: SIEMPRE corriendo; acerca cur->target suavemente cada frame.
+      // Esto da fluidez aunque el scroll llegue a saltos.
+      function loop(){
+        // suavizado adaptativo: más suave cuando falta poco, más ágil en saltos grandes
+        const diff=target-cur;
+        cur+=diff*0.085;
+        if(Math.abs(diff)<0.0002)cur=target;
+        if(dur&&scrub){
+          const tt=cur*dur;
+          // solo reescribimos si el cambio es perceptible (evita trabajo inútil)
+          if(Math.abs(tt-lastApplied)>0.008){
+            try{video.currentTime=tt;lastApplied=tt;}catch(e){}
+          }
+        }
+        requestAnimationFrame(loop);
+      }
+
+      function onScroll(){
+        const p=prog();
+        target=p;
+        pb.style.width=(p*100).toFixed(1)+'%';
+        caps_u(p);
+      }
+
+      // Arranque: esperamos a que el video tenga suficientes datos para hacer seek fluido
+      function start(){
+        if(running)return;running=true;
+        video.pause();
+        onScroll();
+        requestAnimationFrame(loop);
+      }
+
+      if(reduced){
+        fb();
+        window.addEventListener('scroll',()=>caps_u(prog()),{passive:true});
+      }else{
+        // Precargamos agresivamente: cuando hay datos suficientes, arrancamos
+        video.preload='auto';
+        if(video.readyState>=2){ready=true;start();}
+        video.addEventListener('canplay',()=>{if(!running){ready=true;start();}});
+        video.addEventListener('loadeddata',()=>{if(!running){ready=true;start();}});
+        // Fallback de seguridad por si los eventos no disparan
+        setTimeout(()=>{if(!running)start();},1500);
+
+        window.addEventListener('scroll',onScroll,{passive:true});
+        window.addEventListener('resize',onScroll);
+        video.addEventListener('error',fb);
+
+        // Empuja el video a cargarse ya
+        try{video.load();}catch(e){}
+      }
     })();
 
     document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}));
