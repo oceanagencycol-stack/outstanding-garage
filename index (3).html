@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outstanding Garage — Modern Garage Doors | Miami, FL</title>
+  <meta name="description" content="Licensed & insured garage door installation, repair and maintenance in Miami. Same-day service, free quotes, 24/7 emergency support." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { display:['"Inter"','sans-serif'], body:['"Inter"','sans-serif'] },
+      colors: { brand:{ black:'#0a0a0a', white:'#fafafa', gray:'#e5e5e5', mid:'#888888' } }
+    }}}
+  </script>
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469128/Logo_2_y1rx4s.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preload" as="video" href="https://res.cloudinary.com/dpo9ohngt/video/upload/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{font-family:'Inter',sans-serif;}
+    body{background:#0a0a0a;}
+    ::-webkit-scrollbar{width:6px;}
+    ::-webkit-scrollbar-track{background:#0a0a0a;}
+    ::-webkit-scrollbar-thumb{background:#444;border-radius:3px;}
+    ::-webkit-scrollbar-thumb:hover{background:#666;}
+
+    /* ---------- Reveals ---------- */
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+    .reveal.active{opacity:1;transform:translateY(0);}
+    .reveal-left{opacity:0;transform:translateX(-60px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+    .reveal-left.active{opacity:1;transform:translateX(0);}
+    .reveal-right{opacity:0;transform:translateX(60px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+    .reveal-right.active{opacity:1;transform:translateX(0);}
+    .reveal-scale{opacity:0;transform:scale(.92);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+    .reveal-scale.active{opacity:1;transform:scale(1);}
+    .reveal-blur{opacity:0;filter:blur(12px);transform:translateY(30px);transition:opacity 1s ease,filter 1s ease,transform 1s cubic-bezier(.16,1,.3,1);}
+    .reveal-blur.active{opacity:1;filter:blur(0);transform:translateY(0);}
+
+    /* Hero text line-by-line rise */
+    .hero-line{display:block;overflow:hidden;}
+    .hero-line > span{display:block;transform:translateY(110%);transition:transform 1s cubic-bezier(.16,1,.3,1);}
+    .hero-ready .hero-line > span{transform:translateY(0);}
+    .hero-line:nth-child(2) > span{transition-delay:.12s;}
+    .hero-fade{opacity:0;transform:translateY(20px);transition:opacity 1s ease .5s,transform 1s ease .5s;}
+    .hero-ready .hero-fade{opacity:1;transform:translateY(0);}
+
+    /* Hero parallax bg */
+    .hero-bg{will-change:transform;}
+
+    /* Image / video zoom */
+    .img-zoom{overflow:hidden;}
+    .img-zoom img,.img-zoom video{transition:transform .8s cubic-bezier(.16,1,.3,1);display:block;}
+    .img-zoom:hover img,.img-zoom:hover video{transform:scale(1.07);}
+
+    /* Marquee */
+    @keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+    .marquee-track{animation:marquee 28s linear infinite;}
+    .marquee-track:hover{animation-play-state:paused;}
+
+    /* WhatsApp pulse */
+    @keyframes pulse-ring{0%{transform:scale(1);opacity:1;}100%{transform:scale(1.45);opacity:0;}}
+    .whatsapp-pulse::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:#25D366;animation:pulse-ring 2s ease-out infinite;z-index:-1;}
+
+    .nav-blur{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+
+    .line-grow{width:0;transition:width 1.3s cubic-bezier(.16,1,.3,1);}
+    .line-grow.active{width:100%;}
+
+    /* Stagger */
+    .stagger-children > *{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1);}
+    .stagger-children.active > *:nth-child(1){transition-delay:.08s;opacity:1;transform:translateY(0);}
+    .stagger-children.active > *:nth-child(2){transition-delay:.18s;opacity:1;transform:translateY(0);}
+    .stagger-children.active > *:nth-child(3){transition-delay:.28s;opacity:1;transform:translateY(0);}
+    .stagger-children.active > *:nth-child(4){transition-delay:.38s;opacity:1;transform:translateY(0);}
+    .stagger-children.active > *:nth-child(5){transition-delay:.48s;opacity:1;transform:translateY(0);}
+    .stagger-children.active > *:nth-child(6){transition-delay:.58s;opacity:1;transform:translateY(0);}
+
+    /* Counter pop handled by JS; underline grow on hover for links */
+    .ul-hover{position:relative;}
+    .ul-hover::after{content:'';position:absolute;left:0;bottom:-2px;height:1px;width:0;background:currentColor;transition:width .4s cubic-bezier(.16,1,.3,1);}
+    .ul-hover:hover::after{width:100%;}
+
+    /* ===== ASSEMBLY VIDEO (single section, scroll-scrubbed) ===== */
+    .assembly-track{position:relative;height:320vh;}
+    .assembly-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0a0a0a;}
+    .assembly-video{width:100%;height:100%;object-fit:cover;will-change:contents;}
+    .assembly-vignette{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(10,10,10,.6) 100%);}
+    .assembly-caption{position:absolute;left:0;right:0;bottom:14%;text-align:center;padding:0 1.5rem;opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;pointer-events:none;z-index:3;}
+    .assembly-caption.show{opacity:1;transform:translateY(0);}
+    .assembly-step-label{position:absolute;top:50%;left:6%;transform:translateY(-50%);z-index:3;writing-mode:vertical-rl;font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+    .assembly-progress{position:absolute;bottom:0;left:0;height:3px;background:#fafafa;width:0%;z-index:4;transition:width .1s linear;}
+
+    /* Galería masonry */
+    .masonry{columns:1;column-gap:14px;}
+    @media(min-width:640px){.masonry{columns:2;}}
+    @media(min-width:1024px){.masonry{columns:3;}}
+    .masonry-item{break-inside:avoid;margin-bottom:14px;position:relative;overflow:hidden;border-radius:2px;}
+
+    /* Cursor */
+    @media(min-width:1024px){
+      .custom-cursor{cursor:none;}
+      .cursor-dot{width:8px;height:8px;background:#fafafa;border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transition:transform .15s ease;mix-blend-mode:difference;}
+      .cursor-ring{width:40px;height:40px;border:1.5px solid rgba(250,250,250,.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:transform .3s ease,width .3s ease,height .3s ease;mix-blend-mode:difference;}
+    }
+
+    .lang-btn{font-size:11px;letter-spacing:.1em;font-weight:600;color:rgba(250,250,250,.4);transition:color .3s ease;}
+    .lang-btn.active{color:#fafafa;}
+    .lang-sep{color:rgba(250,250,250,.2);}
+
+    .field{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);transition:border-color .3s ease,background .3s ease;}
+    .field:focus{outline:none;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);}
+
+    .btn-shine{position:relative;overflow:hidden;}
+    .btn-shine::after{content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .6s ease;}
+    .btn-shine:hover::after{left:140%;}
+
+    @media(prefers-reduced-motion:reduce){
+      .reveal,.reveal-left,.reveal-right,.reveal-scale,.reveal-blur,.stagger-children>*,.hero-line>span,.hero-fade{opacity:1!important;transform:none!important;filter:none!important;transition:none!important;}
+      .marquee-track{animation:none;}
+    }
+  </style>
+</head>
+<body class="bg-brand-black text-brand-white custom-cursor overflow-x-hidden">
+
+  <div class="cursor-dot hidden lg:block" id="cursorDot"></div>
+  <div class="cursor-ring hidden lg:block" id="cursorRing"></div>
+
+  <!-- Top trust bar -->
+  <div id="topbar" class="fixed top-0 left-0 right-0 z-[55] bg-white text-black text-center py-1.5 text-[11px] md:text-xs font-medium tracking-wide transition-transform duration-500">
+    <span data-es="✓ Licenciados y asegurados · Servicio el mismo día · Cotización gratis" data-en="✓ Licensed & insured · Same-day service · Free quotes">✓ Licensed &amp; insured · Same-day service · Free quotes</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-7 left-0 right-0 z-50 transition-all duration-500">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-10">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <a href="#hero" class="relative z-50">
+          <img id="navLogo" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469128/Logo_2_y1rx4s.png" alt="Outstanding Garage" class="h-14 md:h-16 transition-all duration-300" />
+        </a>
+        <div class="hidden md:flex items-center gap-9">
+          <a href="#about" class="text-sm font-medium tracking-wide uppercase ul-hover" data-es="Nosotros" data-en="Why us">Why us</a>
+          <a href="#process" class="text-sm font-medium tracking-wide uppercase ul-hover" data-es="Proceso" data-en="Process">Process</a>
+          <a href="#gallery" class="text-sm font-medium tracking-wide uppercase ul-hover" data-es="Trabajos" data-en="Work">Work</a>
+          <a href="#contact" class="text-sm font-medium tracking-wide uppercase ul-hover" data-es="Contacto" data-en="Contact">Contact</a>
+          <div class="flex items-center gap-1.5 ml-1">
+            <button class="lang-btn" data-lang="es">ES</button><span class="lang-sep">/</span><button class="lang-btn active" data-lang="en">EN</button>
+          </div>
+          <a href="tel:+13052401921" class="btn-shine inline-flex items-center gap-2 bg-white text-black px-5 py-2.5 text-sm font-semibold tracking-wide hover:bg-brand-gray transition-colors">
+            <i data-lucide="phone" class="w-4 h-4"></i><span data-es="Llamar" data-en="Call now">Call now</span>
+          </a>
+        </div>
+        <div class="md:hidden flex items-center gap-3 relative z-50">
+          <div class="flex items-center gap-1.5"><button class="lang-btn" data-lang="es">ES</button><span class="lang-sep">/</span><button class="lang-btn active" data-lang="en">EN</button></div>
+          <a href="tel:+13052401921" class="w-9 h-9 flex items-center justify-center bg-white text-black rounded-full" aria-label="Call"><i data-lucide="phone" class="w-4 h-4"></i></a>
+          <button id="menuBtn" class="w-9 h-9 flex items-center justify-center" aria-label="Menu"><i data-lucide="menu" class="w-6 h-6" id="menuIcon"></i></button>
+        </div>
+      </div>
+    </div>
+    <div id="mobileMenu" class="fixed inset-0 bg-brand-black/95 nav-blur z-40 flex flex-col items-center justify-center gap-8 transform translate-x-full transition-transform duration-500 md:hidden">
+      <a href="#about" class="text-2xl font-light mobile-link" data-es="Nosotros" data-en="Why us">Why us</a>
+      <a href="#process" class="text-2xl font-light mobile-link" data-es="Proceso" data-en="Process">Process</a>
+      <a href="#gallery" class="text-2xl font-light mobile-link" data-es="Trabajos" data-en="Work">Work</a>
+      <a href="#contact" class="text-2xl font-light mobile-link" data-es="Contacto" data-en="Contact">Contact</a>
+      <a href="#contact" class="mobile-link mt-4 bg-white text-black px-8 py-3 text-sm font-semibold tracking-wide uppercase" data-es="Cotización gratis" data-en="Get my free quote">Get my free quote</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" class="relative h-screen w-full overflow-hidden">
+    <div class="hero-bg absolute inset-0 scale-110">
+      <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/21c6cfb9a126220c953e95f054714504_azu7ba.jpg" alt="Modern garage door" class="w-full h-full object-cover" />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80"></div>
+    <div id="heroContent" class="relative z-10 h-full flex flex-col justify-end pb-24 md:pb-28 px-6 md:px-10 max-w-[1400px] mx-auto">
+      <p class="hero-fade text-xs md:text-sm font-medium tracking-[0.3em] uppercase text-white/70 mb-4 md:mb-6" data-es="Puertas de garaje · Miami, FL" data-en="Garage Doors · Miami, FL">Garage Doors · Miami, FL</p>
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.92] tracking-tight">
+        <span class="hero-line"><span data-es="Tu garaje," data-en="Your garage,">Your garage,</span></span>
+        <span class="hero-line"><span class="font-light" data-es="elevado." data-en="elevated.">elevated.</span></span>
+      </h1>
+      <div class="hero-fade mt-6 md:mt-9 flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
+        <p class="text-base md:text-lg font-light text-white/80 max-w-md" data-es="Instalación, reparación y mantenimiento de puertas de garaje modernas. Servicio el mismo día, sin sorpresas en el precio." data-en="Modern garage door installation, repair and maintenance. Same-day service, no surprise pricing.">Modern garage door installation, repair and maintenance. Same-day service, no surprise pricing.</p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="#contact" class="btn-shine inline-flex items-center justify-center gap-3 bg-white text-black px-7 py-4 text-sm font-semibold tracking-wide uppercase hover:bg-brand-gray transition-colors">
+            <span data-es="Cotización gratis" data-en="Get my free quote">Get my free quote</span><i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+          <a href="tel:+13052401921" class="inline-flex items-center justify-center gap-2 border border-white/40 hover:border-white hover:bg-white/10 px-7 py-4 text-sm font-medium tracking-wide uppercase transition-all">
+            <i data-lucide="phone" class="w-4 h-4"></i>+1 305 240 1921
+          </a>
+        </div>
+      </div>
+      <!-- mini trust row -->
+      <div class="hero-fade mt-8 flex flex-wrap items-center gap-x-7 gap-y-3 text-xs md:text-sm text-white/70">
+        <span class="inline-flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-white"></i><span data-es="Licenciados y asegurados" data-en="Licensed & insured">Licensed &amp; insured</span></span>
+        <span class="inline-flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-white"></i><span data-es="Respuesta el mismo día" data-en="Same-day response">Same-day response</span></span>
+        <span class="inline-flex items-center gap-2"><i data-lucide="star" class="w-4 h-4 text-white"></i><span data-es="Trabajo garantizado" data-en="Workmanship guaranteed">Workmanship guaranteed</span></span>
+      </div>
+    </div>
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-50">
+      <span class="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
+      <div class="w-px h-8 bg-white/50 animate-pulse"></div>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="bg-white text-black py-4 overflow-hidden">
+    <div class="marquee-track flex items-center whitespace-nowrap" style="width:max-content;">
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Instalación" data-en="Installation">Installation</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Reparación de resortes" data-en="Spring Repair">Spring Repair</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Apertura inteligente" data-en="Smart Openers">Smart Openers</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Emergencias 24/7" data-en="24/7 Emergency">24/7 Emergency</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Diseño a medida" data-en="Custom Design">Custom Design</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Mantenimiento" data-en="Maintenance">Maintenance</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Instalación" data-en="Installation">Installation</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Reparación de resortes" data-en="Spring Repair">Spring Repair</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Apertura inteligente" data-en="Smart Openers">Smart Openers</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Emergencias 24/7" data-en="24/7 Emergency">24/7 Emergency</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Diseño a medida" data-en="Custom Design">Custom Design</span><span>✦</span>
+      <span class="text-sm md:text-base font-semibold tracking-[0.2em] uppercase mx-8" data-es="Mantenimiento" data-en="Maintenance">Maintenance</span><span>✦</span>
+    </div>
+  </div>
+
+  <!-- ABOUT / WHY US -->
+  <section id="about" class="py-24 md:py-36 px-6 md:px-10">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+        <div class="md:col-span-5 reveal-left">
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="Por qué nosotros" data-en="Why Outstanding">Why Outstanding</p>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight">
+            <span data-es="Hecho bien" data-en="Done right">Done right</span><br/><span class="font-light text-brand-mid" data-es="a la primera." data-en="the first time.">the first time.</span>
+          </h2>
+          <div class="line-grow h-px bg-white/20 mt-8 mb-8"></div>
+          <p class="text-base md:text-lg font-light text-white/65 leading-relaxed" data-es="Tu puerta de garaje es la entrada más grande de tu casa y tu primera línea de seguridad. La tratamos así: instalaciones limpias, repuestos de calidad y técnicos que llegan a tiempo." data-en="Your garage door is the largest entry to your home and your first line of security. We treat it that way — clean installs, quality parts, and technicians who show up on time.">Your garage door is the largest entry to your home and your first line of security. We treat it that way — clean installs, quality parts, and technicians who show up on time.</p>
+        </div>
+        <div class="md:col-span-7 md:pt-16 stagger-children" id="stats">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
+            <div class="border-t border-white/10 pt-6"><p class="text-4xl md:text-5xl font-bold tracking-tight"><span class="count" data-target="10">0</span>+</p><p class="text-sm text-white/55 mt-2 font-light" data-es="Años en el sur de Florida" data-en="Years in South Florida">Years in South Florida</p></div>
+            <div class="border-t border-white/10 pt-6"><p class="text-4xl md:text-5xl font-bold tracking-tight"><span class="count" data-target="500">0</span>+</p><p class="text-sm text-white/55 mt-2 font-light" data-es="Puertas instaladas" data-en="Doors installed">Doors installed</p></div>
+            <div class="border-t border-white/10 pt-6"><p class="text-4xl md:text-5xl font-bold tracking-tight"><span class="count" data-target="100">0</span>%</p><p class="text-sm text-white/55 mt-2 font-light" data-es="Satisfacción garantizada" data-en="Satisfaction guaranteed">Satisfaction guaranteed</p></div>
+            <div class="border-t border-white/10 pt-6"><p class="text-4xl md:text-5xl font-bold tracking-tight">24/7</p><p class="text-sm text-white/55 mt-2 font-light" data-es="Servicio de emergencia" data-en="Emergency service">Emergency service</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-20 md:mt-28 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 stagger-children">
+        <div class="group border border-white/10 hover:border-white/40 p-8 md:p-10 transition-all duration-500 hover:bg-white/[0.02] hover:-translate-y-1">
+          <div class="w-12 h-12 flex items-center justify-center border border-white/20 mb-6 group-hover:border-white/50 transition-colors"><i data-lucide="wrench" class="w-5 h-5"></i></div>
+          <h3 class="text-xl font-semibold mb-3" data-es="Instalación y reemplazo" data-en="Installation & replacement">Installation &amp; replacement</h3>
+          <p class="text-sm text-white/55 font-light leading-relaxed" data-es="Puertas nuevas instaladas con precisión y acabados impecables. Te ayudamos a elegir el estilo perfecto." data-en="New doors installed with precision and flawless finishes. We help you pick the perfect style.">New doors installed with precision and flawless finishes. We help you pick the perfect style.</p>
+        </div>
+        <div class="group border border-white/10 hover:border-white/40 p-8 md:p-10 transition-all duration-500 hover:bg-white/[0.02] hover:-translate-y-1">
+          <div class="w-12 h-12 flex items-center justify-center border border-white/20 mb-6 group-hover:border-white/50 transition-colors"><i data-lucide="zap" class="w-5 h-5"></i></div>
+          <h3 class="text-xl font-semibold mb-3" data-es="Reparación express" data-en="Express repair">Express repair</h3>
+          <p class="text-sm text-white/55 font-light leading-relaxed" data-es="¿Resorte roto o puerta atascada? Llegamos el mismo día y la dejamos funcionando sin demoras." data-en="Broken spring or stuck door? We arrive same-day and get it running fast — no waiting around.">Broken spring or stuck door? We arrive same-day and get it running fast — no waiting around.</p>
+        </div>
+        <div class="group border border-white/10 hover:border-white/40 p-8 md:p-10 transition-all duration-500 hover:bg-white/[0.02] hover:-translate-y-1">
+          <div class="w-12 h-12 flex items-center justify-center border border-white/20 mb-6 group-hover:border-white/50 transition-colors"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+          <h3 class="text-xl font-semibold mb-3" data-es="Mantenimiento y tune-up" data-en="Maintenance & tune-ups">Maintenance &amp; tune-ups</h3>
+          <p class="text-sm text-white/55 font-light leading-relaxed" data-es="Planes de mantenimiento que evitan averías costosas y mantienen tu puerta silenciosa y segura por años." data-en="Maintenance plans that prevent costly breakdowns and keep your door quiet and safe for years.">Maintenance plans that prevent costly breakdowns and keep your door quiet and safe for years.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS / ASSEMBLY VIDEO (single section) -->
+  <section id="process" class="bg-neutral-950">
+    <div class="py-24 md:py-32 px-6 md:px-10">
+      <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
+        <div>
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="Cómo trabajamos" data-en="How we build">How we build</p>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight">
+            <span data-es="Mira la puerta" data-en="Watch the door">Watch the door</span><br/><span class="font-light text-brand-mid" data-es="tomar forma." data-en="come together.">come together.</span>
+          </h2>
+        </div>
+        <p class="text-sm text-white/55 font-light max-w-sm" data-es="Desliza hacia abajo y observa cada pieza encajar en su lugar — el mismo cuidado que ponemos en tu casa." data-en="Scroll down and watch every piece lock into place — the same care we bring to your home.">Scroll down and watch every piece lock into place — the same care we bring to your home.</p>
+      </div>
+    </div>
+
+    <div class="assembly-track" id="assemblyTrack">
+      <div class="assembly-sticky">
+        <video id="assemblyVideo" class="assembly-video" muted playsinline preload="auto"
+          poster="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/cd8f992e389e366654fc8df403cd0e79_zpm4m0.jpg">
+          <source src="https://res.cloudinary.com/dpo9ohngt/video/upload/v1779469639/mp__ors9k5.mp4" type="video/mp4" />
+        </video>
+        <div class="assembly-vignette"></div>
+        <div class="assembly-step-label" data-es="El proceso" data-en="The process">The process</div>
+        <div class="assembly-caption" data-from="0.04" data-to="0.40" id="cap1">
+          <span class="inline-block text-xs font-mono tracking-[0.3em] text-white/50 mb-3">01</span>
+          <p class="text-xl md:text-3xl font-light max-w-2xl mx-auto" data-es="Marcos de acero de precisión, alineados al milímetro." data-en="Precision steel frames, aligned to the millimeter.">Precision steel frames, aligned to the millimeter.</p>
+        </div>
+        <div class="assembly-caption" data-from="0.43" data-to="0.82" id="cap2">
+          <span class="inline-block text-xs font-mono tracking-[0.3em] text-white/50 mb-3">02</span>
+          <p class="text-xl md:text-3xl font-light max-w-2xl mx-auto" data-es="Paneles de vidrio templado que encajan a la perfección." data-en="Tempered glass panels that fit flawlessly.">Tempered glass panels that fit flawlessly.</p>
+        </div>
+        <div class="assembly-caption" data-from="0.85" data-to="1.01" id="cap3">
+          <span class="inline-block text-xs font-mono tracking-[0.3em] text-white/50 mb-3">03</span>
+          <p class="text-xl md:text-3xl font-light max-w-2xl mx-auto" data-es="Una puerta terminada. Segura, silenciosa, impecable." data-en="A finished door. Secure, silent, flawless.">A finished door. Secure, silent, flawless.</p>
+        </div>
+        <div class="assembly-progress" id="assemblyProgress"></div>
+      </div>
+    </div>
+
+    <div class="px-6 md:px-10 pb-24 md:pb-32">
+      <div class="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto stagger-children">
+        <div class="border border-white/10 p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4"><span class="text-xs font-mono text-brand-mid">01</span><div class="h-px flex-1 bg-white/10"></div></div>
+          <p class="text-sm text-white/65 font-light leading-relaxed" data-es="Medición precisa y selección de materiales premium para tu hogar." data-en="Precise measurement and premium material selection for your home.">Precise measurement and premium material selection for your home.</p>
+        </div>
+        <div class="border border-white/10 p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4"><span class="text-xs font-mono text-brand-mid">02</span><div class="h-px flex-1 bg-white/10"></div></div>
+          <p class="text-sm text-white/65 font-light leading-relaxed" data-es="Instalación profesional el mismo día, sin desorden ni sorpresas." data-en="Professional same-day installation — no mess, no surprises.">Professional same-day installation — no mess, no surprises.</p>
+        </div>
+        <div class="border border-white/10 p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4"><span class="text-xs font-mono text-brand-mid">03</span><div class="h-px flex-1 bg-white/10"></div></div>
+          <p class="text-sm text-white/65 font-light leading-relaxed" data-es="Prueba final, limpieza y garantía por escrito. Listo." data-en="Final testing, cleanup, and a written warranty. Done.">Final testing, cleanup, and a written warranty. Done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Width Divider -->
+  <div class="relative h-[50vh] md:h-[70vh] overflow-hidden img-zoom reveal-scale">
+    <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779468932/acb937285dffffc5dcbf2ddd1101737d_tl91dv.jpg" alt="Garage door detail" class="w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 reveal">
+      <p class="text-2xl md:text-4xl font-light max-w-3xl leading-snug" data-es="“Llegaron el mismo día, trabajo impecable y precio justo. Mi casa se ve totalmente diferente.”" data-en="“Same-day arrival, flawless work, fair price. My house looks completely different.”">“Same-day arrival, flawless work, fair price. My house looks completely different.”</p>
+      <p class="mt-5 text-xs tracking-[0.3em] uppercase text-white/60" data-es="— Cliente verificado, Miami" data-en="— Verified customer, Miami">— Verified customer, Miami</p>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="py-24 md:py-36 px-6 md:px-10">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16 reveal">
+        <div>
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="Trabajos reales" data-en="Real projects">Real projects</p>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight" data-es="Nuestro trabajo" data-en="Our work">Our work</h2>
+        </div>
+        <p class="text-sm text-white/55 font-light max-w-sm" data-es="Cada proyecto es una entrada transformada. Mira lo que podemos hacer por tu hogar." data-en="Every project is a transformed entrance. See what we can do for your home.">Every project is a transformed entrance. See what we can do for your home.</p>
+      </div>
+      <div class="masonry">
+        <div class="masonry-item img-zoom reveal-scale"><video class="w-full h-auto" muted loop playsinline autoplay preload="metadata" poster="https://res.cloudinary.com/dpo9ohngt/video/upload/so_0/v1781706905/0ddbcd95-89a1-4899-9b98-50d1f7fdbd09_f7svdz.jpg"><source src="https://res.cloudinary.com/dpo9ohngt/video/upload/v1781706905/0ddbcd95-89a1-4899-9b98-50d1f7fdbd09_f7svdz.mp4" type="video/mp4"></video></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706905/d672fa7d-c0ee-4b97-9ec2-178e86f7fc82_i4wfl1.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706905/eed32fae-8bb1-44f7-8cbd-df293376b227_kcqb6e.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><video class="w-full h-auto" muted loop playsinline autoplay preload="metadata" poster="https://res.cloudinary.com/dpo9ohngt/video/upload/so_0/v1781706905/9555ad76-bb0e-4768-bc33-e1bd248e58ff_s8gbtj.jpg"><source src="https://res.cloudinary.com/dpo9ohngt/video/upload/v1781706905/9555ad76-bb0e-4768-bc33-e1bd248e58ff_s8gbtj.mp4" type="video/mp4"></video></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706904/bcfb18d9-c439-40c4-811d-8b6958f84b12_oxby3w.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706904/c0d7a3fd-172b-4e55-b592-29d2c41a74dc_vxeyva.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706903/e6da4d2e-0161-44ce-9496-8d12ff7e5545_oosj71.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706903/a869f160-328c-49c5-b772-94e881bc6b51_ej5w1p.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706903/1131afdc-84a3-4fdd-8f00-40935632d610_ngcp44.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706902/31329426-dcc2-4751-8050-9fec1c37f1e8_ln8pri.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706902/557325a8-51b0-42b2-9fa7-358964b9f35e_dvdd6p.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706902/50eb2a07-330f-48f8-ab2a-8892ecbd362b_ydr1p8.jpg" alt="Project"></div>
+        <div class="masonry-item img-zoom reveal-scale"><img loading="lazy" class="w-full h-auto" src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1781706901/6b4e97d4-a228-45d6-b578-0e437b210eb4_gbinm4.jpg" alt="Project"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-24 md:py-36 px-6 md:px-10 relative overflow-hidden bg-neutral-950">
+    <div class="max-w-[1400px] mx-auto relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+        <div class="md:col-span-7 reveal-left">
+          <p class="text-xs font-medium tracking-[0.3em] uppercase text-brand-mid mb-4" data-es="Cotización gratis" data-en="Free quote">Free quote</p>
+          <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95] tracking-tight">
+            <span data-es="Pide tu" data-en="Get your">Get your</span><br/><span class="font-light text-brand-mid" data-es="cotización hoy." data-en="quote today.">quote today.</span>
+          </h2>
+          <p class="mt-6 text-base font-light text-white/60 max-w-lg leading-relaxed" data-es="Cuéntanos qué necesitas. Tu mensaje llega directo a nuestro WhatsApp y te respondemos en minutos — normalmente el mismo día." data-en="Tell us what you need. Your message goes straight to our WhatsApp and we reply in minutes — usually same-day.">Tell us what you need. Your message goes straight to our WhatsApp and we reply in minutes — usually same-day.</p>
+          <div class="mt-8 space-y-4 max-w-lg">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input id="f_name" type="text" class="field w-full px-4 py-3.5 text-sm text-white placeholder-white/40" data-ph-es="Nombre" data-ph-en="Name" placeholder="Name" />
+              <input id="f_phone" type="tel" class="field w-full px-4 py-3.5 text-sm text-white placeholder-white/40" data-ph-es="Teléfono" data-ph-en="Phone" placeholder="Phone" />
+            </div>
+            <input id="f_service" type="text" class="field w-full px-4 py-3.5 text-sm text-white placeholder-white/40" data-ph-es="Servicio (instalación, reparación, mantenimiento...)" data-ph-en="Service needed (installation, repair, maintenance...)" placeholder="Service needed (installation, repair, maintenance...)" />
+            <textarea id="f_message" rows="4" class="field w-full px-4 py-3.5 text-sm text-white placeholder-white/40 resize-none" data-ph-es="Cuéntanos sobre tu proyecto" data-ph-en="Tell us about your project" placeholder="Tell us about your project"></textarea>
+            <button id="sendWhatsApp" class="btn-shine group w-full inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white px-8 py-4 transition-all duration-400">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <span class="text-sm font-semibold tracking-wide" data-es="Enviar por WhatsApp" data-en="Send via WhatsApp">Send via WhatsApp</span>
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </button>
+            <p class="text-xs text-white/40 font-light text-center" data-es="Se abrirá WhatsApp con tu mensaje listo para enviar." data-en="WhatsApp opens with your message ready to send.">WhatsApp opens with your message ready to send.</p>
+          </div>
+        </div>
+        <div class="md:col-span-5 reveal-right">
+          <div class="space-y-5">
+            <a href="tel:+13052401921" class="block border-t border-white/10 pt-5 group">
+              <p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-1" data-es="Llámanos" data-en="Call us">Call us</p>
+              <span class="text-xl md:text-2xl font-light group-hover:opacity-60 transition-opacity">+1 305 240 1921</span>
+            </a>
+            <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="block border-t border-white/10 pt-5 group">
+              <p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-1">WhatsApp</p>
+              <span class="text-xl md:text-2xl font-light group-hover:opacity-60 transition-opacity">+1 305 240 1921</span>
+            </a>
+            <a href="mailto:sales@outstandinggaragedoors.com" class="block border-t border-white/10 pt-5 group">
+              <p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-1" data-es="Correo" data-en="Email">Email</p>
+              <span class="text-base md:text-lg font-light group-hover:opacity-60 transition-opacity break-all">sales@outstandinggaragedoors.com</span>
+            </a>
+            <a href="https://www.instagram.com/outstandinggarage?igsh=aXIya29mbWY2MXdn" target="_blank" rel="noopener" class="block border-t border-white/10 pt-5 group">
+              <p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-1">Instagram</p>
+              <span class="text-xl md:text-2xl font-light group-hover:opacity-60 transition-opacity">@outstandinggarage</span>
+            </a>
+          </div>
+          <a href="https://share.google/tgKYeKPafphCxJe7q" target="_blank" rel="noopener" class="mt-7 group flex items-center gap-4 border border-white/15 hover:border-white/40 p-5 transition-all duration-400 hover:bg-white/[0.03]">
+            <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
+            <div class="flex-1"><p class="text-xs font-medium tracking-[0.2em] uppercase text-brand-mid mb-1" data-es="Ubicación" data-en="Service area">Service area</p><p class="text-sm font-light" data-es="Ver en Google Maps" data-en="View on Google Maps">View on Google Maps</p></div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-white/40 group-hover:text-white transition-all"></i>
+          </a>
+          <div class="mt-6 p-7 bg-white flex items-center justify-center"><img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469127/Logo_pcyjmj.png" alt="Outstanding Garage" class="h-20 md:h-24" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-10 md:py-14 px-6 md:px-10">
+    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-6">
+        <img src="https://res.cloudinary.com/dpo9ohngt/image/upload/v1779469128/Logo_2_y1rx4s.png" alt="Outstanding Garage" class="h-12 opacity-60" />
+        <p class="text-xs text-white/40 font-light" data-es="© 2025 Outstanding Garage. Licenciados y asegurados. Miami, FL." data-en="© 2025 Outstanding Garage. Licensed & insured. Miami, FL.">© 2025 Outstanding Garage. Licensed &amp; insured. Miami, FL.</p>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="text-white/50 hover:text-white transition-colors" aria-label="WhatsApp"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+        <a href="mailto:sales@outstandinggaragedoors.com" class="text-white/50 hover:text-white transition-colors" aria-label="Email"><i data-lucide="mail" class="w-5 h-5"></i></a>
+        <a href="https://share.google/tgKYeKPafphCxJe7q" target="_blank" rel="noopener" class="text-white/50 hover:text-white transition-colors" aria-label="Maps"><i data-lucide="map-pin" class="w-5 h-5"></i></a>
+        <a href="https://www.instagram.com/outstandinggarage?igsh=aXIya29mbWY2MXdn" target="_blank" rel="noopener" class="text-white/50 hover:text-white transition-colors" aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/13052401921" target="_blank" rel="noopener" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg shadow-black/30 hover:scale-110 transition-transform duration-300 whatsapp-pulse" aria-label="WhatsApp">
+    <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+
+    // Language (EN default)
+    const langButtons=document.querySelectorAll('.lang-btn');let currentLang='en';
+    function setLanguage(lang){currentLang=lang;
+      document.querySelectorAll('[data-es]').forEach(el=>{const v=el.getAttribute('data-'+lang);if(v!==null)el.textContent=v;});
+      document.querySelectorAll('[data-ph-es]').forEach(el=>{const v=el.getAttribute('data-ph-'+lang);if(v!==null)el.placeholder=v;});
+      document.documentElement.lang=lang;
+      langButtons.forEach(b=>b.classList.toggle('active',b.getAttribute('data-lang')===lang));
+      try{localStorage.setItem('og_lang',lang);}catch(e){}}
+    langButtons.forEach(b=>b.addEventListener('click',()=>setLanguage(b.getAttribute('data-lang'))));
+    (function(){let s=null;try{s=localStorage.getItem('og_lang');}catch(e){}setLanguage(s||'en');})();
+
+    // Hero intro
+    window.addEventListener('load',()=>{document.getElementById('heroContent').classList.add('hero-ready');});
+    setTimeout(()=>{const h=document.getElementById('heroContent');if(h)h.classList.add('hero-ready');},400);
+
+    // Form -> WhatsApp
+    document.getElementById('sendWhatsApp').addEventListener('click',()=>{
+      const n=document.getElementById('f_name').value.trim(),p=document.getElementById('f_phone').value.trim(),s=document.getElementById('f_service').value.trim(),m=document.getElementById('f_message').value.trim();
+      const L=currentLang;const lb=L==='es'?{hi:'Hola Outstanding Garage, quiero una cotización.',n:'Nombre',p:'Teléfono',s:'Servicio',m:'Mensaje'}:{hi:'Hi Outstanding Garage, I would like a free quote.',n:'Name',p:'Phone',s:'Service',m:'Message'};
+      let t=lb.hi+'\n\n';if(n)t+=lb.n+': '+n+'\n';if(p)t+=lb.p+': '+p+'\n';if(s)t+=lb.s+': '+s+'\n';if(m)t+=lb.m+': '+m+'\n';
+      window.open('https://wa.me/13052401921?text='+encodeURIComponent(t),'_blank');
+    });
+
+    // Cursor
+    const cd=document.getElementById('cursorDot'),cr=document.getElementById('cursorRing');
+    if(window.innerWidth>=1024){let mx=0,my=0,rx=0,ry=0;
+      document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx-4+'px';cd.style.top=my-4+'px';});
+      (function a(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;cr.style.left=rx-20+'px';cr.style.top=ry-20+'px';requestAnimationFrame(a);})();
+      document.querySelectorAll('a,button,.img-zoom,video,input,textarea').forEach(el=>{el.addEventListener('mouseenter',()=>{cr.style.width='60px';cr.style.height='60px';cd.style.transform='scale(0)';});el.addEventListener('mouseleave',()=>{cr.style.width='40px';cr.style.height='40px';cd.style.transform='scale(1)';});});
+    }
+
+    // Reveal
+    const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active');});},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale,.reveal-blur,.line-grow,.stagger-children').forEach(el=>ro.observe(el));
+
+    // Counter animation
+    const co=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.count').forEach(c=>{const tg=+c.dataset.target;let cur=0;const inc=tg/60;const tk=()=>{cur+=inc;if(cur<tg){c.textContent=Math.floor(cur);requestAnimationFrame(tk);}else c.textContent=tg;};tk();});co.unobserve(e.target);}});},{threshold:.4});
+    const st=document.getElementById('stats');if(st)co.observe(st);
+
+    // Navbar + topbar hide on scroll
+    const navbar=document.getElementById('navbar'),topbar=document.getElementById('topbar');let ls=0;
+    window.addEventListener('scroll',()=>{const cs=window.scrollY;
+      if(cs>60){topbar.style.transform='translateY(-100%)';navbar.style.top='0px';}else{topbar.style.transform='translateY(0)';navbar.style.top='28px';}
+      if(cs>100){navbar.classList.add('nav-blur','bg-black/80');navbar.style.borderBottom='1px solid rgba(255,255,255,.05)';}else{navbar.classList.remove('nav-blur','bg-black/80');navbar.style.borderBottom='none';}
+      if(cs>ls&&cs>360)navbar.style.transform='translateY(-200%)';else navbar.style.transform='translateY(0)';ls=cs;});
+
+    // Mobile menu
+    const mb=document.getElementById('menuBtn'),mm=document.getElementById('mobileMenu'),mi=document.getElementById('menuIcon');let mo=false;
+    mb.addEventListener('click',()=>{mo=!mo;if(mo){mm.style.transform='translateX(0)';document.body.style.overflow='hidden';mi.setAttribute('data-lucide','x');}else{mm.style.transform='translateX(100%)';document.body.style.overflow='';mi.setAttribute('data-lucide','menu');}lucide.createIcons();});
+    document.querySelectorAll('.mobile-link').forEach(l=>l.addEventListener('click',()=>{mo=false;mm.style.transform='translateX(100%)';document.body.style.overflow='';mi.setAttribute('data-lucide','menu');lucide.createIcons();}));
+
+    // Hero parallax
+    const hb=document.querySelector('.hero-bg');
+    window.addEventListener('scroll',()=>{const y=window.scrollY;if(y<window.innerHeight)hb.style.transform=`translateY(${y*0.35}px) scale(1.1)`;});
+
+    // Assembly scroll-scrub
+    (function(){const track=document.getElementById('assemblyTrack'),video=document.getElementById('assemblyVideo'),pb=document.getElementById('assemblyProgress');
+      const caps=[{el:document.getElementById('cap1'),f:.04,t:.40},{el:document.getElementById('cap2'),f:.43,t:.82},{el:document.getElementById('cap3'),f:.85,t:1.01}];
+      const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;let dur=0,target=0,cur=0,ticking=false,scrub=true;
+      function meta(){dur=video.duration||10;}if(video.readyState>=1)meta();video.addEventListener('loadedmetadata',meta);
+      function fb(){scrub=false;video.loop=true;video.play().catch(()=>{});}
+      function prog(){const r=track.getBoundingClientRect(),vh=window.innerHeight,sc=track.offsetHeight-vh;let p=(-r.top)/sc;return Math.max(0,Math.min(1,p));}
+      function caps_u(p){caps.forEach(c=>{if(c.el)c.el.classList.toggle('show',p>=c.f&&p<c.t);});}
+      function render(){cur+=(target-cur)*.12;if(dur&&scrub){try{video.currentTime=cur*dur;}catch(e){}}if(Math.abs(target-cur)>.001)requestAnimationFrame(render);else ticking=false;}
+      function os(){const p=prog();target=p;pb.style.width=(p*100)+'%';caps_u(p);if(!ticking&&scrub){ticking=true;requestAnimationFrame(render);}}
+      if(reduced){fb();window.addEventListener('scroll',()=>caps_u(prog()),{passive:true});}
+      else{video.pause();window.addEventListener('scroll',os,{passive:true});window.addEventListener('resize',os);os();video.addEventListener('error',fb);}
+    })();
+
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}));
+  </script>
+</body>
+</html>
